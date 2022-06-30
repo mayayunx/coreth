@@ -675,23 +675,25 @@ func (api *API) MutateTraceTransaction(ctx context.Context, hash common.Hash, co
 		msg = types.NewMessage(
 			msg.From(), msg.To(), msg.Nonce(),
 			msg.Value(),
-			uint64(17000000),
-			// msg.Gas(),
-			big.NewInt(0),
-			// msg.GasPrice(),
+			msg.Gas(),
+			msg.GasPrice(),
+			msg.GasFeeCap(),
+			msg.GasTipCap(),
 			common.FromHex(*inputData),
-			msg.AccessList(), msg.CheckNonce(),
+			msg.AccessList(), 
+			msg.IsFake(),
 		)
 	} else {
 		msg = types.NewMessage(
 			msg.From(), msg.To(), msg.Nonce(),
 			msg.Value(),
-			uint64(17000000),
-			// msg.Gas(),
-			big.NewInt(0),
-			// msg.GasPrice(),
+			msg.Gas(),
+			msg.GasPrice(),
+			msg.GasFeeCap(),
+			msg.GasTipCap(),
 			msg.Data(),
-			msg.AccessList(), msg.CheckNonce(),
+			msg.AccessList(), 
+			msg.IsFake(),
 		)
 	}
 	isMutate := true
@@ -699,10 +701,10 @@ func (api *API) MutateTraceTransaction(ctx context.Context, hash common.Hash, co
 		config = &TraceConfig{}
 	}
 	config.Mutate = &isMutate
-	txctx := &txTraceContext{
-		index: int(index),
-		hash:  hash,
-		block: blockHash,
+	txctx := &Context{
+		BlockHash: blockHash,
+		TxIndex:   int(index),
+		TxHash:    hash,
 	}
 	return api.traceTx(ctx, msg, txctx, vmctx, statedb, config, &tellerMutateMap)
 }
