@@ -231,7 +231,8 @@ type VM struct {
 
 	builder *blockBuilder
 
-	gossiper Gossiper
+	gossiper    Gossiper
+	gossipStats GossipStats
 
 	baseCodec codec.Registry
 	codec     codec.Manager
@@ -551,6 +552,7 @@ func (vm *VM) initializeChain(lastAcceptedHash common.Hash) error {
 	//
 	// NOTE: gossip network must be initialized first otherwise ETH tx gossip will
 	// not work.
+	vm.gossipStats = NewGossipStats()
 	vm.gossiper = vm.createGossiper()
 	vm.builder = vm.NewBlockBuilder(vm.toEngine)
 	vm.builder.awaitSubmittedTxs()
@@ -734,7 +736,7 @@ func (vm *VM) postBatchOnFinalizeAndAssemble(header *types.Header, state *state.
 		}
 
 		// Ensure that adding [tx] to the block will not exceed the block size soft limit.
-		txSize := len(tx.Bytes())
+		txSize := len(tx.SignedBytes())
 		if size+txSize > targetAtomicTxsSize {
 			vm.mempool.CancelCurrentTx(tx.ID())
 			break
