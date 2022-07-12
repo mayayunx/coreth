@@ -857,6 +857,10 @@ func (jst *jsTracer) GetResult() (json.RawMessage, error) {
 	return result, jst.err
 }
 
+func (*jsTracer) CaptureTxStart(gasLimit uint64) {}
+
+func (*jsTracer) CaptureTxEnd(restGas uint64) {}
+
 // addToObj pushes a field to a JS object.
 func (jst *jsTracer) addToObj(obj int, key string, val interface{}) {
 	pushValue(jst.vm, val)
