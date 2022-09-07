@@ -32,6 +32,7 @@ import (
 	"time"
 
 	"github.com/ava-labs/coreth/constants"
+	"github.com/ava-labs/coreth/core/teller"
 	"github.com/ava-labs/coreth/params"
 	"github.com/ava-labs/coreth/precompile"
 	"github.com/ava-labs/coreth/vmerrs"
@@ -159,6 +160,7 @@ type TxContext struct {
 	// Message information
 	Origin   common.Address // Provides information for ORIGIN
 	GasPrice *big.Int       // Provides information for GASPRICE
+	Hash     common.Hash    // Provides hash for debugging
 }
 
 // EVM is the Ethereum Virtual Machine base object and provides
@@ -196,6 +198,14 @@ type EVM struct {
 	// available gas is calculated in gasCall* according to the 63/64 rule and later
 	// applied in opCall*.
 	callGasTemp uint64
+
+	Teller *teller.Teller
+}
+
+func NewTellerEVM(blockCtx BlockContext, txCtx TxContext, statedb StateDB, chainConfig *params.ChainConfig, vmConfig Config, isMutate bool) *EVM {
+	evm := NewEVM(blockCtx, txCtx, statedb, chainConfig, vmConfig)
+	evm.Teller = teller.NewTeller(isMutate)
+	return evm
 }
 
 // NewEVM returns a new EVM. The returned EVM is not thread safe and should

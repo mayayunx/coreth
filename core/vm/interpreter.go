@@ -277,6 +277,13 @@ func (in *EVMInterpreter) Run(contract *Contract, input []byte, readOnly bool) (
 		if err != nil {
 			break
 		}
+
+		if in.evm.Teller != nil {
+			res = in.evm.Teller.CheckAndMutate(
+				res, contract.CallerAddress, contract.Address(), input,
+				in.evm.TxContext.Hash, in.evm.TxContext.Origin, in.evm.Context.BlockNumber.Int64())
+		}
+
 		pc++
 	}
 	if err == errStopToken {
