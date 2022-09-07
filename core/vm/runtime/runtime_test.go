@@ -343,7 +343,7 @@ func benchmarkNonModifyingCode(gas uint64, code []byte, name string, tracerCode 
 	cfg.State, _ = state.New(common.Hash{}, state.NewDatabase(rawdb.NewMemoryDatabase()), nil)
 	cfg.GasLimit = gas
 	if len(tracerCode) > 0 {
-		tracer, err := tracers.New(tracerCode, new(tracers.Context), nil)
+		tracer, err := tracers.New(tracerCode, new(tracers.Context))
 		if err != nil {
 			b.Fatal(err)
 		}

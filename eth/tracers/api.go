@@ -822,7 +822,7 @@ func (api *API) traceTx(ctx context.Context, message core.Message, txctx *Contex
 	// Default tracer is the struct logger
 	tracer = logger.NewStructLogger(config.Config)
 	if config.Tracer != nil {
-		tracer, err = New(*config.Tracer, txctx, config.TracerConfig)
+		tracer, err = New(*config.Tracer, txctx)
 		if err != nil {
 			return nil, err
 		}

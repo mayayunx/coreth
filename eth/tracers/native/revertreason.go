@@ -57,8 +57,8 @@ type revertReasonTracer struct {
 }
 
 // newRevertReasonTracer returns a new revert reason tracer.
-func newRevertReasonTracer(_ *tracers.Context, _ json.RawMessage) (tracers.Tracer, error) {
-	return &revertReasonTracer{}, nil
+func newRevertReasonTracer(_ *tracers.Context) (tracers.Tracer) {
+	return &revertReasonTracer{}
 }
 
 // CaptureStart implements the EVMLogger interface to initialize the tracing operation.
