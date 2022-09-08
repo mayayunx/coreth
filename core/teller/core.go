@@ -225,21 +225,59 @@ func (t *tellerCore) checkAndMutate(res []byte, caller common.Address, callee co
 			return t.mutateCalcWithdrawOneCoin(res, caller, callee, input)
 		}
 
-		// getTokenToEthInputPrice(uint256)
-		if bytes.Equal(input[:4], common.FromHex("0x95b68fe7")) {
-			// we simply use calWithdrawOneCoin as its the same
-			return t.mutateTokenToEthInputPrice(res, caller, callee, input)
-		}
-
-		// getEthToTokenInputPrice(uint256)
-		if bytes.Equal(input[:4], common.FromHex("0xcd7724c3")) {
-			// we simply use calWithdrawOneCoin as its the same
-			return t.mutateTokenToEthInputPrice(res, caller, callee, input)
-		}
-
 		// getExpectedRate(address,address,uint256)
 		if bytes.Equal(input[:4], common.FromHex("0x809a9e55")) {
 			return t.mutateKyberGetExpectedRate(res, caller, callee, input)
+		}
+
+		// get_virtual_price()
+		// same mutation as calc_token_amount
+		if bytes.Equal(input[:4], common.FromHex("0xbb7b8b80")) {
+			return t.mutateCalcTokenAmount3Crv(res, caller, callee, input)
+		}
+
+		// getPoolState()
+		if bytes.Equal(input[:4], common.FromHex("0x217ac237")) {
+			return t.mutateGetPoolState(res, caller, callee, input)
+		}
+
+		//price0CumulativeLast()
+		if bytes.Equal(input[:4], common.FromHex("0x5909c0d5")) {
+			return t.mutatePriceCumulativeLast(res, caller, callee, input)
+		}
+		//price1CumulativeLast() 
+		if bytes.Equal(input[:4], common.FromHex("0x5a3d5493")) {
+			return t.mutatePriceCumulativeLast(res, caller, callee, input)
+		}
+		
+		// quotePotentialSwap(address,address,uint256)
+		if bytes.Equal(input[:4], common.FromHex("0x43c2e2f5")) {
+			return t.mutateQuotePotentialSwapOrWithDraw(res, caller, callee, input)
+		}
+		// quotePotentialWithdraw(address,uint256)　　
+		if bytes.Equal(input[:4], common.FromHex("0x907448ed")) {
+			return t.mutateQuotePotentialSwapOrWithDraw(res, caller, callee, input)
+		}
+		
+		// quote(uint256,uint256,uint256)　
+		if bytes.Equal(input[:4], common.FromHex("0xad615dec")) {
+			return t.mutateQuoteOrGetAmountInOrOut(res, caller, callee, input)
+		}
+        // getAmountOut(uint256,uint256,uint256)
+		if bytes.Equal(input[:4], common.FromHex("0x054d50d4")) {
+			return t.mutateQuoteOrGetAmountInOrOut(res, caller, callee, input)
+		}
+        // getAmountIn(uint256,uint256,uint256)　
+		if bytes.Equal(input[:4], common.FromHex("0x85f8c259")) {
+			return t.mutateQuoteOrGetAmountInOrOut(res, caller, callee, input)
+		}
+        // getAmountsOut(uint256,address[])
+		if bytes.Equal(input[:4], common.FromHex("0xd06ca61f")) {
+			return t.mutateGetAmountsInOrOut(res, caller, callee, input)
+		}
+        // getAmountsIn(uint256,address[])　
+		if bytes.Equal(input[:4], common.FromHex("0x1f00ca74")) {
+			return t.mutateGetAmountsInOrOut(res, caller, callee, input)
 		}
 
 		// else if bytes.Compare(input[:4], common.FromHex("0x5a3d5493")) == 0 {
