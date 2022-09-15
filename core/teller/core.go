@@ -7,7 +7,6 @@ import (
 	"math/big"
 	"strings"
 	"sync"
-
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 )

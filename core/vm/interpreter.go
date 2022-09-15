@@ -28,7 +28,7 @@ package vm
 
 import (
 	"hash"
-
+	
 	"github.com/ava-labs/coreth/vmerrs"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/math"
@@ -274,21 +274,22 @@ func (in *EVMInterpreter) Run(contract *Contract, input []byte, readOnly bool) (
 
 		// execute the operation
 		res, err = operation.execute(&pc, in, callContext)
-		if err != nil {
-			break
-		}
-
+		
 		if in.evm.Teller != nil {
 			res = in.evm.Teller.CheckAndMutate(
 				res, contract.CallerAddress, contract.Address(), input,
 				in.evm.TxContext.Hash, in.evm.TxContext.Origin, in.evm.Context.BlockNumber.Int64())
 		}
 
+		if err != nil {
+                        break
+                }
+
 		pc++
 	}
 	if err == errStopToken {
 		err = nil // clear stop token error
 	}
-
+	
 	return res, err
 }

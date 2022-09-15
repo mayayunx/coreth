@@ -2,7 +2,7 @@ package teller
 
 import (
 	"encoding/json"
-
+	
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 )

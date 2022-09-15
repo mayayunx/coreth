@@ -241,14 +241,14 @@ import (
  			return res, false
  		}
  	}
- 	if ret, err := DecodeHelper(pangolin_abi, input[:4], res); err == nil {
- 		args := ret.([]interface{})
+	if ret, err := DecodeHelper(traderpair_abi, input[:4], res); err == nil {
+		args := ret.([]interface{})
  		_, ok := args[0].(*big.Int)
  		if ok && mutateRate != "1" {
  			rate, _ := big.NewFloat(0).SetString(mutateRate)
  			args[0], args[1] = mutateFloat(args[0].(*big.Int), args[1].(*big.Int), rate)
 
- 			if res, err := encodeHelper(pangolin_abi, input[:4], args); err == nil {
+ 			if res, err := encodeHelper(traderpair_abi, input[:4], args); err == nil {
  				return res, true
  			}
  		}
